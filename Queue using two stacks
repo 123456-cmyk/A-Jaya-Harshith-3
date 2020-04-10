@@ -1,0 +1,87 @@
+//  C program to implement queue using two stacks
+#include <stdio.h> 
+#include <stdlib.h> 
+struct snode 
+{ 
+    int data; 
+    struct snode*next; 
+}; 
+void push(struct snode** top_x, int new_data); 
+int pop(struct snode** top_x); 
+struct queue
+{ 
+    struct snode* stack1; 
+    struct snode* stack2; 
+}; 
+void enQueue(struct queue* q, int y) 
+{ 
+    push(&q->stack1, y); 
+} 
+int deQueue(struct queue* q) 
+{ 
+    int y; 
+    if (q->stack1 == NULL && q->stack2 == NULL) 
+    { 
+        printf("Q is empty"); 
+        getchar(); 
+        exit(0); 
+    } 
+    if (q->stack2 == NULL) 
+    { 
+        while (q->stack1 != NULL) 
+        { 
+            y = pop(&q->stack1); 
+            push(&q->stack2, y); 
+        } 
+    } 
+  
+    y = pop(&q->stack2); 
+    return y; 
+} 
+void push(struct snode** top_x, int new_data) 
+{ 
+    struct snode* new_node = (struct snode*)malloc(sizeof(struct snode)); 
+    if (new_node == NULL) 
+    { 
+        printf("Stack is overflowed \n"); 
+        getchar(); 
+        exit(0); 
+    } 
+  
+    new_node->data = new_data; 
+   new_node->next = (*top_x); 
+   (*top_x) = new_node; 
+} 
+int pop(struct snode** top_x) 
+{ 
+    int res; 
+    struct snode* top; 
+    if (*top_x == NULL) 
+    { 
+        printf("Stack is underflown \n"); 
+        getchar(); 
+        exit(0); 
+    } 
+    else { 
+        top = *top_x; 
+        res = top->data; 
+        *top_x = top->next; 
+        free(top); 
+        return res; 
+    } 
+} 
+int main() 
+{ 
+    struct queue* q = (struct queue*)malloc(sizeof(struct queue)); 
+    q->stack1 = NULL; 
+    q->stack2 = NULL; 
+    enQueue(q, 1); 
+    enQueue(q, 2); 
+    enQueue(q, 3); 
+  
+    printf("%d ", deQueue(q)); 
+    printf("%d ", deQueue(q)); 
+    printf("%d ", deQueue(q)); 
+  
+    return 0; 
+} 
